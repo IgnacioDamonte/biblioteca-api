@@ -101,7 +101,6 @@ tr:hover td{background:#FAFAFE}tr:last-child td{border-bottom:none}
 <body>
 <header class="hdr">
   <div class="hdr-l"><div class="hdr-ic">📚</div><div class="hdr-t"><h1>Sistema de Biblioteca</h1><p>Gestion de Libros, Autores y Prestamos</p></div></div>
-  <span class="hdr-bdg">REST API</span>
 </header>
 <div class="stats">
   <div class="sc"><div class="si si-b">📖</div><div><div class="sn" id="tL">0</div><div class="sl">Libros</div></div></div>
@@ -174,6 +173,7 @@ tr:hover td{background:#FAFAFE}tr:last-child td{border-bottom:none}
 <script>
 var curTab='autores',ent='',eid=null,filtroEstado='TODOS',pendingDel=null;
 var DA=[],DL=[],DP=[];
+function fmtFecha(f){if(!f)return '--';var p=f.split('-');if(p.length===3)return p[2]+'/'+p[1]+'/'+p[0];return f;}
 document.querySelectorAll('[data-tab]').forEach(function(el){
   el.addEventListener('click',function(){
     curTab=this.getAttribute('data-tab');
@@ -187,7 +187,7 @@ document.querySelectorAll('[data-tab]').forEach(function(el){
     if(tc)tc.classList.add('active');
   });
 });
-function loadAll(){Promise.all([loadA(),loadL(),loadP()]).then(function(){updateStats();});}
+function loadAll(){loadP().then(function(){Promise.all([loadA(),loadL()]).then(function(){updateStats();});});}
 function loadA(){return fetch('/api/autores').then(function(r){return r.json();}).then(function(d){DA=d;renderA(DA);});}
 function loadL(){return fetch('/api/libros').then(function(r){return r.json();}).then(function(d){DL=d;renderL(DL);});}
 function loadP(){return fetch('/api/prestamos').then(function(r){return r.json();}).then(function(d){DP=d;renderP(DP);});}
@@ -197,7 +197,7 @@ function renderA(data){
   if(!data.length){tb.innerHTML='<tr><td colspan="6"><div class="empty"><div class="ei">✍️</div><p>No hay autores</p></div></td></tr>';return;}
   tb.innerHTML=data.map(function(a){
     var cnt=DL.filter(function(l){return l.autor&&l.autor.id===a.id;}).length;
-    return '<tr><td data-label="ID"><b>#'+a.id+'</b></td><td data-label="Nombre">'+a.nombre+'</td><td data-label="Nacionalidad">'+(a.nacionalidad||'--')+'</td><td data-label="Nacimiento">'+(a.fechaNacimiento||'--')+'</td><td data-label="Libros"><span class="cnt-bdg">'+cnt+'</span></td><td><div class="acts"><button class="btn btn-e" onclick="editR(&apos;autor&apos;,'+a.id+')">Editar</button><button class="btn btn-d" onclick="delR(&apos;autor&apos;,'+a.id+')">Eliminar</button></div></td></tr>';
+    return '<tr><td data-label="ID"><b>#'+a.id+'</b></td><td data-label="Nombre">'+a.nombre+'</td><td data-label="Nacionalidad">'+(a.nacionalidad||'--')+'</td><td data-label="Nacimiento">'+fmtFecha(a.fechaNacimiento)+'</td><td data-label="Libros"><span class="cnt-bdg">'+cnt+'</span></td><td><div class="acts"><button class="btn btn-e" onclick="editR(&apos;autor&apos;,'+a.id+')">Editar</button><button class="btn btn-d" onclick="delR(&apos;autor&apos;,'+a.id+')">Eliminar</button></div></td></tr>';
   }).join('');
 }
 function renderL(data){
@@ -215,7 +215,10 @@ function renderP(data){
   tb.innerHTML=data.map(function(p){
     var bc=p.estado==='ACTIVO'?'bdg-a':'bdg-d';
     var dvBtn=p.estado==='ACTIVO'?'<button class="btn btn-dev" onclick="devolverP('+p.id+')">Devolver</button>':'';
-    return '<tr><td data-label="ID"><b>#'+p.id+'</b></td><td data-label="Libro">'+(p.libro?p.libro.titulo:'--')+'</td><td data-label="Prestatario">'+p.nombrePrestatario+'</td><td data-label="Email">'+(p.emailPrestatario||'--')+'</td><td data-label="Prestamo">'+(p.fechaPrestamo||'--')+'</td><td data-label="Devolucion">'+(p.fechaDevolucion||'--')+'</td><td data-label="Estado"><span class="bdg '+bc+'">'+p.estado+'</span></td><td><div class="acts">'+dvBtn+'<button class="btn btn-e" onclick="editR(&apos;prestamo&apos;,'+p.id+')">Editar</button><button class="btn btn-d" onclick="delR(&apos;prestamo&apos;,'+p.id+')">Eliminar</button></div></td></tr>';
+
+
+    return '<tr><td data-label="ID"><b>#'+p.id+'</b></td><td data-label="Libro">'+(p.libro?p.libro.titulo:'--')+'</td><td data-label="Prestatario">'+p.nombrePrestatario+'</td><td data-label="Email">'+(p.emailPrestatario||'--')+'</td><td data-label="Prestamo">'+fmtFecha(p.fechaPrestamo)+'</td><td data-label="Devolucion">'+fmtFecha(p.fechaDevolucion)+'</td>' +
+            '<td data-label="Estado"><span class="bdg '+bc+'">'+p.estado+'</span></td><td><div class="acts">'+dvBtn+'<button class="btn btn-e" onclick="editR(&apos;prestamo&apos;,'+p.id+')">Editar</button><button class="btn btn-d" onclick="delR(&apos;prestamo&apos;,'+p.id+')">Eliminar</button></div></td></tr>';
   }).join('');
 }
 function filterA(){var q=document.getElementById('srA').value.toLowerCase();renderA(DA.filter(function(a){return a.nombre.toLowerCase().indexOf(q)>-1;}));}

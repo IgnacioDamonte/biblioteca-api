@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
         Autor g=new Autor(); g.setNombre("Gabriel Garcia Marquez"); g.setNacionalidad("Colombiana"); g.setFechaNacimiento("1927-03-06"); ar.save(g);
         Autor b=new Autor(); b.setNombre("Jorge Luis Borges"); b.setNacionalidad("Argentina"); b.setFechaNacimiento("1899-08-24"); ar.save(b);
         Autor r=new Autor(); r.setNombre("J.K. Rowling"); r.setNacionalidad("Britanica"); r.setFechaNacimiento("1965-07-31"); ar.save(r);
-        Libro l1=new Libro(); l1.setTitulo("Cien anios de soledad"); l1.setIsbn("978-0-06-088328-7"); l1.setGenero("Realismo magico"); l1.setAnioPublicacion(1967); l1.setAutor(g); lr.save(l1);
+        Libro l1=new Libro(); l1.setTitulo("Cien años de soledad"); l1.setIsbn("978-0-06-088328-7"); l1.setGenero("Realismo magico"); l1.setAnioPublicacion(1967); l1.setAutor(g); lr.save(l1);
         Libro l2=new Libro(); l2.setTitulo("Ficciones"); l2.setIsbn("978-0-8021-3030-5"); l2.setGenero("Ficcion"); l2.setAnioPublicacion(1944); l2.setAutor(b); lr.save(l2);
         Libro l3=new Libro(); l3.setTitulo("Harry Potter y la piedra filosofal"); l3.setIsbn("978-84-7888-476-0"); l3.setGenero("Fantasia"); l3.setAnioPublicacion(1997); l3.setAutor(r); lr.save(l3);
         Libro l4=new Libro(); l4.setTitulo("El Aleph"); l4.setIsbn("978-84-206-1933-5"); l4.setGenero("Cuentos"); l4.setAnioPublicacion(1949); l4.setAutor(b); lr.save(l4);
