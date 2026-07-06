@@ -14,7 +14,7 @@ API REST completa para la administración de libros, autores y préstamos, con f
 - **H2 Database** (en memoria)
 - **Lombok**
 - **Maven**
-- HTML / CSS / JavaScript (Vanilla) para el frontend
+- HTML / CSS / JavaScript para el frontend
 
 ---
 
